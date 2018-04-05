@@ -20,9 +20,13 @@ def get_list_of_duplicates(folder_files_map):
 
 
 def print_duplicates(duplicate_lists):
-    for duplicate_list in duplicate_lists:
-        for duplicate in duplicate_list:
-            print(duplicate)
+    if duplicate_lists:
+        print('Found following duplicates in {}'.format(path_to_folder))
+        for duplicate_list in duplicate_lists:
+            for duplicate in duplicate_list:
+                print(duplicate)
+    else:
+        print('There is no duplicates in {}'.format(path_to_folder))
 
 
 if __name__ == '__main__':
@@ -30,17 +34,10 @@ if __name__ == '__main__':
         path_to_folder = sys.argv[1]
     except IndexError:
         sys.exit('You should pass folder')
-    except FileNotFoundError:
-        sys.exit('There is no such folder')
 
     if not os.path.isdir(path_to_folder):
         sys.exit('Please, pass folder not file')
 
-map = create_folder_files_map(path_to_folder)
-duplicates = get_list_of_duplicates(map)
-
-if duplicates:
-    print('Found following duplicates in {}'.format(path_to_folder))
-    print_duplicates(duplicates)
-else:
-    print('There is no duplicates in {}'.format(path_to_folder))
+folder_files_map = create_folder_files_map(path_to_folder)
+duplicates = get_list_of_duplicates(folder_files_map)
+print(duplicates)
