@@ -1,6 +1,5 @@
 import sys
 import os
-import glob
 
 
 def create_folder_files_map(path_to_folder):
@@ -9,23 +8,39 @@ def create_folder_files_map(path_to_folder):
         for filename in dir_files:
             path_to_file = os.path.join(dir_path, filename)
             file_size = os.path.getsize(path_to_file)
-            files_list[path_to_file] = [filename, file_size] 
+            try:
+                files_list[(filename, file_size)] += [path_to_file]
+            except KeyError:
+                files_list[(filename, file_size)] = [path_to_file]
     return files_list
 
 
-def get_list_of_duplicates(folder_map):
-    dublicates = []
-    pass
+def get_list_of_duplicates(folder_files_map):
+    return [files for files in folder_files_map.values() if len(files) > 1]
+
+
+def print_duplicates(duplicate_lists):
+    for duplicate_list in duplicate_lists:
+        for duplicate in duplicate_list:
+            print(duplicate)
 
 
 if __name__ == '__main__':
     try:
         path_to_folder = sys.argv[1]
     except IndexError:
-        sys.exit('You should pass folder to file')
+        sys.exit('You should pass folder')
     except FileNotFoundError:
         sys.exit('There is no such folder')
 
+    if not os.path.isdir(path_to_folder):
+        sys.exit('Please, pass folder not file')
+
 map = create_folder_files_map(path_to_folder)
-print(map)
-get_list_of_duplicates(map)
+duplicates = get_list_of_duplicates(map)
+
+if len(duplicates) == 0:
+    print('There is no duplicates in {}'.format(path_to_folder))
+else:
+    print('Found following duplicates in {}'.format(path_to_folder))
+    print_duplicates(duplicates)
