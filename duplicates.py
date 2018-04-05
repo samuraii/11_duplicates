@@ -39,8 +39,8 @@ if __name__ == '__main__':
 map = create_folder_files_map(path_to_folder)
 duplicates = get_list_of_duplicates(map)
 
-if len(duplicates) == 0:
-    print('There is no duplicates in {}'.format(path_to_folder))
-else:
+if duplicates:
     print('Found following duplicates in {}'.format(path_to_folder))
     print_duplicates(duplicates)
+else:
+    print('There is no duplicates in {}'.format(path_to_folder))
