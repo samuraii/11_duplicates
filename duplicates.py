@@ -1,17 +1,15 @@
 import sys
 import os
+from collections import defaultdict
 
 
 def create_folder_files_map(path_to_folder):
-    files_list = {}
+    files_list = defaultdict(list)
     for dir_path, dirs, dir_files in os.walk(path_to_folder):
         for filename in dir_files:
             path_to_file = os.path.join(dir_path, filename)
             file_size = os.path.getsize(path_to_file)
-            try:
-                files_list[(filename, file_size)] += [path_to_file]
-            except KeyError:
-                files_list[(filename, file_size)] = [path_to_file]
+            files_list[(filename, file_size)].append(path_to_file)
     return files_list
 
 
@@ -38,6 +36,6 @@ if __name__ == '__main__':
     if not os.path.isdir(path_to_folder):
         sys.exit('Please, pass folder not file')
 
-folder_files_map = create_folder_files_map(path_to_folder)
-duplicates = get_list_of_duplicates(folder_files_map)
-print(duplicates)
+    folder_files_map = create_folder_files_map(path_to_folder)
+    duplicates = get_list_of_duplicates(folder_files_map)
+    print_duplicates(duplicates)
